@@ -47,12 +47,22 @@ A free, open-source spam and phishing detection service powered by Hugging Face 
 
 ```bash
 # Clone this repository
-git clone https://github.com/yourusername/scamcheck.git
+git clone https://github.com/bettergov/scamcheck.git
 cd scamcheck
 
 # Install dependencies
 npm install
 
+# Run the server
+npm run dev
+
+# Open the browser
+open http://localhost:8787
+```
+
+### 5. Deploy
+
+```bash
 # Login to Cloudflare
 npx wrangler login
 

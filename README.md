@@ -163,10 +163,6 @@ data = response.json()
 print(data['interpretation']['message'])
 ```
 
-## 🧪 Testing
-
-Open `test-page.html` in your browser for a friendly UI to test the API. Don't forget to update the `WORKER_URL` variable with your actual worker URL!
-
 ## 🔧 Configuration
 
 ### Using Different Models

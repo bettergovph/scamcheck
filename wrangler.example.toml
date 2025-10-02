@@ -1,0 +1,12 @@
+name = "scamcheck"
+main = "scamcheck.js"
+compatibility_date = "2024-01-01"
+
+# Enable importing HTML files as text
+[rules]
+{ type = "Text", globs = ["**/*.html"] }
+
+# Environment variables (create wrangler.toml and add these)
+# [vars]
+# HF_API_KEY = "your-huggingface-api-key-here"
+# TURNSTILE_SECRET_KEY = "your-turnstile-secret-key-here"

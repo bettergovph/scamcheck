@@ -1,0 +1,24 @@
+{
+  "name": "scamcheck",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for spam and phishing detection using Hugging Face models",
+  "main": "scamcheck.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "keywords": [
+    "spam",
+    "phishing",
+    "detection",
+    "cloudflare",
+    "workers",
+    "huggingface"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

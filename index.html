@@ -22,7 +22,7 @@
   <meta property="og:title" content="Free Scam & Phishing Detector | BetterGov.ph">
   <meta property="og:description"
     content="Protect yourself from scams! Free AI-powered tool to detect spam, phishing, and fraudulent messages. Analyze SMS and emails instantly.">
-  <meta property="og:image" content="https://scamcheck.bettegov.ph/better-horizontal-logo.png">
+  <meta property="og:image" content="https://scamcheck.ph/assets/better-horizontal-logo.png">
   <meta property="og:locale" content="en_PH">
   <meta property="og:site_name" content="BetterGov.ph Scam Detector">
 
@@ -32,7 +32,7 @@
   <meta property="twitter:title" content="Free Scam & Phishing Detector | BetterGov.ph">
   <meta property="twitter:description"
     content="Protect yourself from scams! Free AI-powered tool to detect spam, phishing, and fraudulent messages.">
-  <meta property="twitter:image" content="https://scamcheck.ph/better-horizontal-logo.png">
+  <meta property="twitter:image" content="https://scamcheck.ph/assets/better-horizontal-logo.png">
 
   <!-- Additional Meta Tags -->
   <meta name="theme-color" content="#667eea">
@@ -41,12 +41,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Scam Detector">
 
-  <!-- Geographic Tags -->
-  <meta name="geo.region" content="PH">
-  <meta name="geo.placename" content="Philippines">
-
-  <!-- Language -->
-  <meta http-equiv="content-language" content="en-PH">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -70,7 +66,7 @@
       "@type": "Organization",
       "name": "BetterGov.ph",
       "url": "https://bettergov.ph",
-      "logo": "https://scamcheck.bettegov.ph/better-horizontal-logo.png"
+      "logo": "https://scamcheck.ph/assets/better-horizontal-logo.png"
     },
     "featureList": [
       "AI-powered spam detection",
@@ -91,7 +87,6 @@
         opacity: 0;
         transform: translateY(-10px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -101,103 +96,317 @@
     .animate-slideIn {
       animation: slideIn 0.3s ease-out;
     }
+
+    /* Toast Notifications */
+    @keyframes slideInFromTop {
+      from {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideOutToTop {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+    }
+
+    .toast {
+      animation: slideInFromTop 0.3s ease-out;
+    }
+
+    .toast.hiding {
+      animation: slideOutToTop 0.3s ease-out;
+    }
   </style>
 </head>
 
-<body class="min-h-screen flex flex-col gap-8 items-center justify-center p-2 md:p-5 bg-gray-200">
-  <a href="https://bettergov.ph" target="_blank" rel="noopener noreferrer">
-    <img src="/better-horizontal-logo.png" alt="" class="w-64 h-16 md:w-120 md:h-18 mx-auto" />
-  </a>
-  <div class="bg-white shadow-2xl max-w-2xl w-full px-2 md:px-10 py-4 md:py-10">
+<body class="min-h-screen bg-gray-50">
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2"></div>
 
-    <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">🛡️ Scam & Phishing Detector</h1>
-    <p class="text-sm text-gray-600 mb-8 text-center">Test your messages for spam and phishing attempts</p>
+  <div class="max-w-4xl mx-auto px-4 py-6">
+    
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-12">
+      <a href="https://bettergov.ph" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity">
+        <img src="assets/better-horizontal-logo.png" alt="BetterGov.ph" class="h-8 md:h-10 w-auto" />
+      </a>
+      <div class="flex items-center gap-4">
+        <select id="languageSelect" 
+          class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          onchange="changeLanguage(this.value)">
+          <option value="en">English</option>
+          <option value="tl">Filipino</option>
+        </select>
+      </div>
+    </header>
 
-    <textarea id="textInput"
-      class="w-full min-h-[150px] p-4 border-2 border-gray-200 rounded-xl text-base resize-y transition-colors focus:outline-none focus:border-indigo-500"
-      placeholder="Paste your email or SMS text here to check if it's spam or phishing...&#10;&#10;Example: 'URGENT: Your account has been suspended. Click here to verify your identity immediately!'"></textarea>
+    <!-- Main Content -->
+    <main>
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-2" data-i18n="title">
+        🛡️ Scam & Phishing Detector
+      </h1>
+      <p class="text-base text-gray-600 text-center mb-10" data-i18n="subtitle">
+        Test your messages for spam and phishing attempts
+      </p>
 
-    <button id="checkButton" onclick="checkText()"
-      class="w-full py-4 mt-5 bg-blue-600 text-white rounded-xl text-base font-semibold cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/40 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none">
-      Analyze Text
-    </button>
+      <!-- Editor Card -->
+      <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden mb-8">
+        <!-- Editor Header -->
+        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 px-5 py-4 border-b border-gray-200">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+              <span class="text-xl">🛡️</span>
+            </div>
+            <div>
+              <div class="text-sm font-bold text-indigo-700">scamcheck</div>
+              <div class="text-xs text-gray-500">AI-Powered Analysis</div>
+            </div>
+          </div>
+        </div>
 
-    <div class="mt-5 flex justify-center items-center">
-      <div class="cf-turnstile" data-sitekey="0x4AAAAAAB4b4PFcxkn3-61f" data-callback="onTurnstileSuccess"></div>
-    </div>
+        <!-- Editor Content -->
+        <div class="p-6 bg-gray-50/50">
+          <textarea 
+            id="textInput" 
+            class="w-full min-h-[200px] p-4 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all resize-y text-gray-800 text-sm leading-relaxed placeholder-gray-400"
+            spellcheck="false"
+            data-i18n-placeholder="placeholder"
+            placeholder="Paste your email or SMS text here to check if it's spam or phishing...
 
-    <div id="result" class="hidden mt-8 p-5 rounded-xl"></div>
+Example: 'URGENT: Your account has been suspended. Click here immediately!'"></textarea>
+        </div>
 
-    <div class="mt-5 p-4 bg-gray-50 rounded-xl">
-      <h3 class="text-sm font-medium mb-3 text-gray-600">Try these examples:</h3>
-      <button
-        class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(0)">📱 GCash Scam</button>
-      <button
-        class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(1)">📦 Delivery SMS</button>
-      <button
-        class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(2)">🏦 Bank Alert</button>
-      <button
-        class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(3)">₿ Crypto Scam</button>
-      <button
-        class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(4)">🎁 Prize Scam</button>
-      <button
-        class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(5)">💼 Job Scam</button>
-      <button
-        class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(6)">✅ Legitimate</button>
-    </div>
+        <!-- Editor Footer -->
+        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+          <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div id="captchaWrapper" class="flex items-center">
+              <div class="cf-turnstile" data-sitekey="0x4AAAAAAB4b4PFcxkn3-61f" data-callback="onTurnstileSuccess"></div>
+            </div>
+            <div class="flex gap-3 ml-auto">
+              <button 
+                onclick="clearText()"
+                class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl transition-all duration-200 hover:shadow-md"
+                data-i18n="clearButton">
+                Clear Text
+              </button>
+              <button 
+                id="analyzeBtn" 
+                onclick="checkText()"
+                class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                data-i18n="analyzeButton">
+                Analyze
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Display -->
+      <div id="result" class="hidden"></div>
+
+      <!-- Examples -->
+      <div class="mt-8">
+        <h3 class="text-sm font-semibold text-gray-500 tracking-wide mb-4" data-i18n="examplesTitle">
+          Try these examples:
+        </h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <button onclick="setExample(0)" 
+            class="px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md hover:scale-105 transition-all duration-200 text-left group">
+            <div class="text-2xl mb-1">📱</div>
+            <div class="text-xs font-medium text-gray-700 group-hover:text-indigo-600" data-i18n="example1">GCash Scam</div>
+          </button>
+          <button onclick="setExample(1)" 
+            class="px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md hover:scale-105 transition-all duration-200 text-left group">
+            <div class="text-2xl mb-1">📦</div>
+            <div class="text-xs font-medium text-gray-700 group-hover:text-indigo-600" data-i18n="example2">Delivery SMS</div>
+          </button>
+          <button onclick="setExample(2)" 
+            class="px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md hover:scale-105 transition-all duration-200 text-left group">
+            <div class="text-2xl mb-1">🏦</div>
+            <div class="text-xs font-medium text-gray-700 group-hover:text-indigo-600" data-i18n="example3">Bank Alert</div>
+          </button>
+          <button onclick="setExample(3)" 
+            class="px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md hover:scale-105 transition-all duration-200 text-left group">
+            <div class="text-2xl mb-1">₿</div>
+            <div class="text-xs font-medium text-gray-700 group-hover:text-indigo-600" data-i18n="example4">Crypto Scam</div>
+          </button>
+          <button onclick="setExample(4)" 
+            class="px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md hover:scale-105 transition-all duration-200 text-left group">
+            <div class="text-2xl mb-1">🎁</div>
+            <div class="text-xs font-medium text-gray-700 group-hover:text-indigo-600" data-i18n="example5">Prize Scam</div>
+          </button>
+          <button onclick="setExample(5)" 
+            class="px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md hover:scale-105 transition-all duration-200 text-left group">
+            <div class="text-2xl mb-1">💼</div>
+            <div class="text-xs font-medium text-gray-700 group-hover:text-indigo-600" data-i18n="example5">Job Scam</div>
+          </button>
+          <button onclick="setExample(6)" 
+            class="px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md hover:scale-105 transition-all duration-200 text-left group">
+            <div class="text-2xl mb-1">✅</div>
+            <div class="text-xs font-medium text-gray-700 group-hover:text-indigo-600" data-i18n="example6">Legitimate</div>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 mb-8 text-center text-sm text-gray-600">
+      <div class="flex justify-center items-center gap-2 mb-2">
+        <a href="#about" onclick="showAbout(event)" class="hover:text-indigo-600 transition-colors" data-i18n="aboutLink">about</a>
+        <span>•</span>
+        <a href="https://github.com/bettergovph/scamcheck" target="_blank" rel="noopener" class="hover:text-indigo-600 transition-colors">source</a>
+        <span>•</span>
+        <a href="https://bettergov.ph/privacy" target="_blank" rel="noopener" class="hover:text-indigo-600 transition-colors" data-i18n="privacyLink">privacy</a>
+      </div>
+      <div>
+        <span data-i18n="createdBy">This service is provided by</span>
+        <a href="https://bettergov.ph" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-700 font-medium">BetterGov.ph</a>
+      </div>
+    </footer>
   </div>
 
-  <div class="text-gray-600 text-sm mt-4">
-    <p>This service is provided for free by <a href="https://bettergov.ph" target="_blank"
-        rel="noopener noreferrer">BetterGov.ph</a></p>
+  <!-- About Modal -->
+  <div id="aboutModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onclick="closeModal(event)">
+    <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex justify-between items-start">
+          <h2 class="text-2xl font-bold text-gray-900" data-i18n="aboutTitle">About Scam Detector</h2>
+          <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">&times;</button>
+        </div>
+      </div>
+      <div class="p-6 space-y-4 text-gray-700">
+        <p data-i18n="aboutText1">Scam Detector is a free, open-source tool powered by AI to help protect Filipinos from phishing and spam messages.</p>
+        
+        <h3 class="text-lg font-semibold text-gray-900 mt-6" data-i18n="featuresTitle">Features</h3>
+        <ul class="space-y-2">
+          <li data-i18n="feature1">🆓 100% Free - No registration required</li>
+          <li data-i18n="feature2">🤖 AI-Powered - Uses state-of-the-art machine learning</li>
+          <li data-i18n="feature3">🔒 Privacy-Focused - No data storage or tracking</li>
+          <li data-i18n="feature4">⚡ Fast - Instant results</li>
+          <li data-i18n="feature5">🌐 Open Source - MIT Licensed</li>
+        </ul>
+
+        <h3 class="text-lg font-semibold text-gray-900 mt-6" data-i18n="howItWorksTitle">How it works</h3>
+        <p data-i18n="howItWorksText">Our tool analyzes your message using advanced natural language processing to detect common phishing patterns, suspicious links, urgency tactics, and other red flags commonly used in scams.</p>
+
+        <h3 class="text-lg font-semibold text-gray-900 mt-6" data-i18n="disclaimerTitle">Disclaimer</h3>
+        <p data-i18n="disclaimerText">This tool is for educational purposes. Always use multiple layers of security and verify suspicious messages through official channels.</p>
+
+        <div class="mt-6 pt-6 border-t border-gray-200">
+          <a href="https://github.com/bettergovph/scamcheck" target="_blank" rel="noopener" 
+            class="inline-block px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-lg transition-colors">
+            <span data-i18n="viewOnGithub">View on GitHub</span>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Worker URL automatically uses the same origin (works for both dev and production)
+    // Worker URL
     const WORKER_URL = window.location.origin;
 
-    // Store Turnstile token
+    // Translations
+    const translations = {
+      en: {
+        title: "🛡️ Scam & Phishing Detector",
+        subtitle: "Test your messages for spam and phishing attempts",
+        placeholder: "Paste your email or SMS text here to check if it's spam or phishing...\n\nExample: 'URGENT: Your account has been suspended. Click here to verify your identity immediately!'",
+        analyzeButton: "Analyze",
+        clearButton: "Clear Text",
+        examplesTitle: "Try these examples:",
+        example1: "GCash Scam",
+        example2: "Delivery",
+        example3: "Bank Alert",
+        example4: "Crypto",
+        example5: "Prize",
+        example6: "Legitimate",
+        aboutLink: "about",
+        privacyLink: "privacy",
+        createdBy: "This service is provided by",
+        analyzing: "Analyzing...",
+        confidence: "Confidence",
+        indicators: "Phishing Indicators Detected",
+        highRisk: "⚠️ HIGH RISK: This appears to be phishing/spam",
+        mediumRisk: "⚠️ MODERATE RISK: This may be phishing/spam",
+        lowRisk: "⚠️ LOW RISK: Some indicators detected",
+        legitimate: "✅ This appears to be legitimate",
+        enterText: "Please enter some text to analyze",
+        completeCaptcha: "Please complete the CAPTCHA verification",
+        rateLimitError: "Rate limit exceeded. Please wait a moment.",
+        aboutTitle: "About Scam Detector",
+        aboutText1: "Scam Detector is a free, open-source tool powered by AI to help protect Filipinos from phishing and spam messages.",
+        featuresTitle: "Features",
+        feature1: "🆓 100% Free - No registration required",
+        feature2: "🤖 AI-Powered - Uses state-of-the-art machine learning",
+        feature3: "🔒 Privacy-Focused - No data storage or tracking",
+        feature4: "⚡ Fast - Instant results",
+        feature5: "🌐 Open Source - MIT Licensed",
+        howItWorksTitle: "How it works",
+        howItWorksText: "Our tool analyzes your message using advanced natural language processing to detect common phishing patterns, suspicious links, urgency tactics, and other red flags commonly used in scams.",
+        disclaimerTitle: "Disclaimer",
+        disclaimerText: "This tool is for educational purposes. Always use multiple layers of security and verify suspicious messages through official channels.",
+        viewOnGithub: "View on GitHub"
+      },
+      tl: {
+        title: "🛡️ Detektor ng Scam at Phishing",
+        subtitle: "Suriin ang inyong mensahe para sa spam at phishing",
+        placeholder: "I-paste dito ang iyong email o SMS upang suriin kung ito ay spam o phishing...\n\nHalimbawa: 'MADALIANG PABATID: Ang iyong account ay nasuspinde. I-click dito upang agad na patunayan ang iyong pagkakakilanlan!'",
+        analyzeButton: "Suriin",
+        clearButton: "Burahin ang Teksto",
+        examplesTitle: "Subukan ang mga ito:",
+        example1: "GCash Scam",
+        example2: "Delivery",
+        example3: "Bank Alert",
+        example4: "Crypto",
+        example5: "Prize",
+        example6: "Lehitimo",
+        aboutLink: "tungkol",
+        privacyLink: "privacy",
+        createdBy: "Ang serbisyong ito ay mula sa",
+        analyzing: "Sinusuri...",
+        confidence: "Katiyakan",
+        indicators: "Nakitang mga Indikador",
+        highRisk: "⚠️ MATAAS NA PANGANIB: Mukhang phishing/spam ito",
+        mediumRisk: "⚠️ KATAMTAMANG PANGANIB: Maaaring phishing/spam",
+        lowRisk: "⚠️ MABABANG PANGANIB: May mga indikador",
+        legitimate: "✅ Mukhang lehitimo ito",
+        enterText: "Mangyaring maglagay ng teksto",
+        completeCaptcha: "Mangyaring kumpletuhin ang CAPTCHA verification",
+        rateLimitError: "Sobra na ang requests. Sandali lang.",
+        aboutTitle: "Tungkol sa Scam Detector",
+        aboutText1: "Ang Scam Detector ay libreng tool na gumagamit ng AI upang protektahan ang mga Pilipino mula sa phishing at spam.",
+        featuresTitle: "Mga Feature",
+        feature1: "🆓 100% Libre - Walang registration",
+        feature2: "🤖 AI-Powered - Gumagamit ng machine learning",
+        feature3: "🔒 Privacy-Focused - Walang data storage",
+        feature4: "⚡ Mabilis - Instant na resulta",
+        feature5: "🌐 Open Source - MIT Licensed",
+        howItWorksTitle: "Paano gumagana",
+        howItWorksText: "Sinusuri ng tool ang mensahe gamit ang advanced AI upang makita ang phishing patterns, suspicious links, at iba pang red flags.",
+        disclaimerTitle: "Disclaimer",
+        disclaimerText: "Ang tool na ito ay para sa educational purposes. Laging mag-ingat at i-verify ang mga suspicious messages sa official channels.",
+        viewOnGithub: "Tingnan sa GitHub"
+      }
+    };
+
+    // State
+    let currentLang = localStorage.getItem('preferredLanguage') || 'en';
     let turnstileToken = null;
     let isSessionVerified = sessionStorage.getItem('captchaVerified') === 'true';
 
-    // Callback when Turnstile verification succeeds
-    function onTurnstileSuccess(token) {
-      turnstileToken = token;
-      // Mark session as verified
-      sessionStorage.setItem('captchaVerified', 'true');
-      isSessionVerified = true;
-
-      // Hide CAPTCHA after first successful verification
-      const captchaContainer = document.querySelector('.captcha-container');
-      if (captchaContainer) {
-        captchaContainer.style.display = 'none';
-      }
-    }
-
-    // Check if already verified and hide CAPTCHA
-    window.addEventListener('load', () => {
-      if (isSessionVerified) {
-        const captchaContainer = document.querySelector('.captcha-container');
-        if (captchaContainer) {
-          captchaContainer.style.display = 'none';
-        }
-      }
-    });
-
-    // Function to clear session verification (for testing/logout)
-    function clearSessionVerification() {
-      sessionStorage.removeItem('captchaVerified');
-      isSessionVerified = false;
-      location.reload();
-    }
-
+    // Examples
     const examples = [
       // GCash Phishing Scam
       "FREE MSG: GCASH ALERT! Your account will be locked due to suspicious activity. Verify now to avoid suspension. Click: gcash-verify.com/ph/account?user=09171234567 DO NOT IGNORE!",
@@ -221,39 +430,197 @@
       "Hi! This is Jenny from the dentist's office. Just confirming your appointment tomorrow, January 15 at 3:00 PM with Dr. Cruz. Please arrive 10 minutes early to update your records. If you need to reschedule, please call us at 02-8234-5678. See you tomorrow!"
     ];
 
+    // Language functions
+    function changeLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('preferredLanguage', lang);
+      updateUILanguage();
+    }
+
+    function updateUILanguage() {
+      const t = translations[currentLang] || translations.en;
+      
+      document.querySelectorAll('[data-i18n]').forEach(elem => {
+        const key = elem.getAttribute('data-i18n');
+        if (t[key]) {
+          elem.textContent = t[key];
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(elem => {
+        elem.placeholder = t.placeholder;
+      });
+
+      document.querySelectorAll('[data-i18n-title]').forEach(elem => {
+        const key = elem.getAttribute('data-i18n-title');
+        if (t[key]) {
+          elem.title = t[key];
+        }
+      });
+
+      document.getElementById('languageSelect').value = currentLang;
+    }
+
+    // Turnstile callback
+    function onTurnstileSuccess(token) {
+      turnstileToken = token;
+      sessionStorage.setItem('captchaVerified', 'true');
+      isSessionVerified = true;
+      
+      const wrapper = document.getElementById('captchaWrapper');
+      if (wrapper) {
+        wrapper.style.display = 'none';
+      }
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+      updateUILanguage();
+      
+      if (isSessionVerified) {
+        const wrapper = document.getElementById('captchaWrapper');
+        if (wrapper) {
+          wrapper.style.display = 'none';
+        }
+      }
+    });
+
+    // Toast notification system
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      const bgColors = {
+        info: 'bg-blue-600',
+        warning: 'bg-yellow-600',
+        error: 'bg-red-600',
+        success: 'bg-green-600'
+      };
+
+      const icons = {
+        info: 'ℹ️',
+        warning: '⚠️',
+        error: '❌',
+        success: '✅'
+      };
+
+      toast.className = `toast flex items-center gap-3 ${bgColors[type]} text-white px-6 py-4 rounded-xl shadow-2xl min-w-[300px] max-w-md`;
+      toast.innerHTML = `
+        <span class="text-xl">${icons[type]}</span>
+        <span class="flex-1 font-medium">${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        toast.classList.add('hiding');
+        setTimeout(() => {
+          container.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+
+    // Clear text
+    function clearText() {
+      document.getElementById('textInput').value = '';
+      document.getElementById('result').classList.add('hidden');
+      document.getElementById('textInput').focus();
+    }
+
+    // Set example
     function setExample(index) {
       document.getElementById('textInput').value = examples[index];
     }
 
+    // Analyze phishing indicators
+    function analyzePhishingIndicators(text) {
+      const indicators = [];
+      const lower = text.toLowerCase();
+      
+      // Check for suspicious URLs first (major red flag)
+      const urlPattern = /(https?:\/\/[^\s]+)/g;
+      const urls = text.match(urlPattern) || [];
+      let hasSuspiciousUrl = false;
+      
+      urls.forEach(url => {
+        const lowerUrl = url.toLowerCase();
+        // Whitelist legitimate domains
+        const legitimateDomains = ['.gov.ph', 'bettergov.ph', 'gcash.com', 'paymaya.com', 'bdo.com.ph', 'bpi.com.ph', 'metrobank.com.ph', 'unionbank.com'];
+        const isLegitimate = legitimateDomains.some(domain => lowerUrl.includes(domain));
+        
+        if (!isLegitimate) {
+          indicators.push({ type: 'Suspicious Link', severity: 'high', description: 'Contains unverified link' });
+          hasSuspiciousUrl = true;
+        }
+      });
+
+      // Only flag urgency if there's also a suspicious URL or money request
+      const urgencyWords = ['urgent', 'immediately', 'now', 'asap', 'expire', 'suspended', 'locked', 'limited'];
+      const hasUrgency = urgencyWords.some(word => lower.includes(word));
+      
+      // Check for money/payment requests
+      const moneyWords = ['pay php', 'send php', 'processing fee', 'clearance fee', 'claim fee', 'transfer', 'deposit'];
+      const hasMoneyRequest = moneyWords.some(word => lower.includes(word));
+      
+      // Urgency is only suspicious with URL or money request
+      if (hasUrgency && (hasSuspiciousUrl || hasMoneyRequest)) {
+        indicators.push({ type: 'Urgency Language', severity: 'high', description: 'Uses urgent language with suspicious request' });
+      }
+
+      // Money requests are suspicious
+      if (hasMoneyRequest) {
+        indicators.push({ type: 'Money Request', severity: 'high', description: 'Requests payment or fees' });
+      }
+
+      // Personal info requests
+      const personalWords = ['send id', 'valid id', 'full name', 'password', 'pin code', 'otp code', 'cvv'];
+      if (personalWords.some(word => lower.includes(word))) {
+        indicators.push({ type: 'Personal Info Request', severity: 'high', description: 'Asks for sensitive personal information' });
+      }
+
+      // Prize/lottery (almost always scam)
+      const prizeWords = ['congratulations', 'you won', 'winner', 'prize', 'raffle promo'];
+      if (prizeWords.some(word => lower.includes(word))) {
+        indicators.push({ type: 'Prize Claim', severity: 'high', description: 'Unsolicited prize notification' });
+      }
+
+      // Too good to be true offers
+      const tooGoodWords = ['earn 300%', 'guaranteed returns', '100% profit', 'passive income', 'no experience needed'];
+      if (tooGoodWords.some(word => lower.includes(word))) {
+        indicators.push({ type: 'Unrealistic Offer', severity: 'high', description: 'Promises unrealistic returns' });
+      }
+
+      return indicators;
+    }
+
+    // Check text
     async function checkText() {
+      const t = translations[currentLang] || translations.en;
       const textInput = document.getElementById('textInput');
-      const checkButton = document.getElementById('checkButton');
+      const analyzeBtn = document.getElementById('analyzeBtn');
       const resultDiv = document.getElementById('result');
 
       const text = textInput.value.trim();
 
       if (!text) {
-        alert('Please enter some text to analyze');
+        showToast(t.enterText, 'warning');
         return;
       }
 
-      // Only require CAPTCHA for first request in session
       if (!isSessionVerified && !turnstileToken) {
-        alert('Please complete the CAPTCHA verification');
+        showToast(t.completeCaptcha, 'warning');
         return;
       }
 
-      // Disable button and show loading
-      checkButton.disabled = true;
-      checkButton.textContent = 'Analyzing...';
-      resultDiv.classList.remove('show');
+      analyzeBtn.disabled = true;
+      analyzeBtn.textContent = t.analyzing;
+      resultDiv.classList.add('hidden');
 
       try {
         const response = await fetch(WORKER_URL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             text,
             turnstileToken: turnstileToken || null,
@@ -264,57 +631,100 @@
         const data = await response.json();
 
         if (data.error) {
+          if (data.error.includes('rate limit')) {
+            throw new Error(t.rateLimitError);
+          }
           throw new Error(data.error);
         }
 
-        displayResult(data);
+        displayResult(data, text);
 
       } catch (error) {
-        resultDiv.className = 'block mt-8 p-5 rounded-xl bg-red-50 border-2 border-red-200 text-red-700 animate-slideIn';
+        showToast(error.message, 'error');
+        resultDiv.className = 'bg-red-50 border-2 border-red-200 rounded-xl p-6 animate-slideIn';
         resultDiv.innerHTML = `
-                    <div class="text-lg font-semibold mb-4">❌ Error</div>
-                    <div class="text-sm">${error.message}</div>
-                    <div class="text-sm mt-2">
-                        <strong>Note:</strong> Make sure to update the WORKER_URL in the HTML file with your actual Cloudflare Worker URL.
-                    </div>
-                `;
+          <div class="text-lg font-semibold text-red-900 mb-2">❌ Error</div>
+          <div class="text-sm text-red-700">${error.message}</div>
+        `;
+        resultDiv.classList.remove('hidden');
       } finally {
-        checkButton.disabled = false;
-        checkButton.textContent = 'Analyze Text';
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = t.analyzeButton;
       }
     }
 
-    function displayResult(data) {
+    // Display result
+    function displayResult(data, text) {
+      const t = translations[currentLang] || translations.en;
       const resultDiv = document.getElementById('result');
       const interpretation = data.interpretation;
-      const predictions = data.predictions;
-
       const isSpam = interpretation.isSpam;
-      resultDiv.className = `block mt-8 p-5 rounded-xl animate-slideIn ${isSpam ? 'bg-red-50 border-2 border-red-200' : 'bg-green-50 border-2 border-green-200'}`;
 
-      let predictionsHTML = '';
-      if (predictions && Array.isArray(predictions)) {
-        predictionsHTML = predictions.map(pred => `
-                    <div class="bg-white p-2.5 my-1 rounded-md flex justify-between items-center">
-                        <span class="font-semibold">${pred.label}</span>
-                        <span class="text-indigo-600 font-semibold">${(pred.score * 100).toFixed(2)}%</span>
-                    </div>
-                `).join('');
+      const bgColor = isSpam ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200';
+      resultDiv.className = `${bgColor} border-2 rounded-xl p-6 animate-slideIn`;
+
+      const indicators = analyzePhishingIndicators(text);
+      
+      let indicatorsHTML = '';
+      if (indicators.length > 0 && isSpam) {
+        const severityColors = {
+          high: 'bg-red-100 text-red-800 border-red-200',
+          medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+          low: 'bg-blue-100 text-blue-800 border-blue-200'
+        };
+
+        const badgesHTML = indicators
+          .map(ind => `<span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium border ${severityColors[ind.severity]}">${ind.type}</span>`)
+          .join('');
+        
+        const detailsHTML = indicators
+          .map(ind => `<div class="text-sm text-gray-700">• ${ind.description}</div>`)
+          .join('');
+
+        indicatorsHTML = `
+          <div class="mt-4 pt-4 border-t border-gray-300">
+            <div class="text-sm font-semibold text-gray-700 mb-2">${t.indicators}</div>
+            <div class="flex flex-wrap gap-2 mb-3">${badgesHTML}</div>
+            <div class="space-y-1">${detailsHTML}</div>
+          </div>
+        `;
       }
 
       resultDiv.innerHTML = `
-                <div class="text-lg font-semibold mb-4">${interpretation.message}</div>
-                <div class="text-sm text-gray-600">
-                    <strong>Confidence:</strong> ${interpretation.confidence.toUpperCase()} (${interpretation.confidenceScore})
-                </div>
-
-            `;
+        <div class="text-xl font-bold mb-3 ${isSpam ? 'text-red-900' : 'text-green-900'}">${interpretation.message}</div>
+        <div class="text-sm text-gray-700">
+          <strong>${t.confidence}:</strong> ${interpretation.confidence.toUpperCase()} (${interpretation.confidenceScore})
+        </div>
+        ${indicatorsHTML}
+      `;
+      
+      resultDiv.classList.remove('hidden');
     }
 
-    // Allow Enter key to submit (with Ctrl/Cmd)
+    // Modal functions
+    function showAbout(e) {
+      e.preventDefault();
+      document.getElementById('aboutModal').classList.remove('hidden');
+    }
+
+    function closeModal(e) {
+      if (!e || e.target.id === 'aboutModal' || e.target.tagName === 'BUTTON') {
+        document.getElementById('aboutModal').classList.add('hidden');
+      }
+    }
+
+    // Keyboard shortcuts
     document.getElementById('textInput').addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
         checkText();
+      }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal({ target: { id: 'aboutModal' }});
       }
     });
   </script>

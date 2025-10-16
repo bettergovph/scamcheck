@@ -230,12 +230,14 @@
       // Update all elements with data-i18n attribute
       document.querySelectorAll('[data-i18n]').forEach(elem => {
         const key = elem.getAttribute('data-i18n');
-        if (t[key]) {
-          if (key === 'footer') {
-            elem.innerHTML = t[key];
-          } else {
-            elem.textContent = t[key];
-          }
+        if (!t[key]) {
+          return;
+        }
+
+        if (key === 'footer') {
+          elem.innerHTML = t[key];
+        } else {
+          elem.textContent = t[key];
         }
       });
 

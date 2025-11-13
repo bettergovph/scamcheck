@@ -110,15 +110,27 @@
   </a>
   <div class="bg-white shadow-2xl max-w-2xl w-full px-2 md:px-10 py-4 md:py-10">
 
-    <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">🛡️ Scam & Phishing Detector</h1>
-    <p class="text-sm text-gray-600 mb-8 text-center">Test your messages for spam and phishing attempts</p>
+    <!-- Language Selector -->
+    <div class="mb-4 flex justify-end">
+      <select id="languageSelect" 
+        class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="tl">Filipino</option>
+      </select>
+    </div>
+
+    <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center" data-i18n="title">🛡️ Scam & Phishing Detector</h1>
+    <p class="text-sm text-gray-600 mb-8 text-center" data-i18n="subtitle">Test your messages for spam and phishing attempts</p>
 
     <textarea id="textInput"
       class="w-full min-h-[150px] p-4 border-2 border-gray-200 rounded-xl text-base resize-y transition-colors focus:outline-none focus:border-indigo-500"
+      data-i18n-placeholder="placeholder"
       placeholder="Paste your email or SMS text here to check if it's spam or phishing...&#10;&#10;Example: 'URGENT: Your account has been suspended. Click here to verify your identity immediately!'"></textarea>
 
     <button id="checkButton" onclick="checkText()"
-      class="w-full py-4 mt-5 bg-blue-600 text-white rounded-xl text-base font-semibold cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/40 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none">
+      class="w-full py-4 mt-5 bg-blue-600 text-white rounded-xl text-base font-semibold cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/40 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
+      data-i18n="analyzeButton">
       Analyze Text
     </button>
 
@@ -129,37 +141,116 @@
     <div id="result" class="hidden mt-8 p-5 rounded-xl"></div>
 
     <div class="mt-5 p-4 bg-gray-50 rounded-xl">
-      <h3 class="text-sm font-medium mb-3 text-gray-600">Try these examples:</h3>
+      <h3 class="text-sm font-medium mb-3 text-gray-600" data-i18n="examplesTitle">Try these examples:</h3>
       <button
         class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(0)">📱 GCash Scam</button>
+        onclick="setExample(0)">📱 <span data-i18n="example1">GCash Scam</span></button>
       <button
         class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(1)">📦 Delivery SMS</button>
+        onclick="setExample(1)">📦 <span data-i18n="example2">Delivery SMS</span></button>
       <button
         class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(2)">🏦 Bank Alert</button>
+        onclick="setExample(2)">🏦 <span data-i18n="example3">Bank Alert</span></button>
       <button
         class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(3)">₿ Crypto Scam</button>
+        onclick="setExample(3)">₿ <span data-i18n="example4">Crypto Scam</span></button>
       <button
         class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(4)">🎁 Prize Scam</button>
+        onclick="setExample(4)">🎁 <span data-i18n="example5">Prize Scam</span></button>
       <button
         class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(5)">💼 Job Scam</button>
+        onclick="setExample(5)">💼 <span data-i18n="example6">Job Scam</span></button>
       <button
         class="inline-block py-2 px-3 m-1 mr-2 bg-white border border-gray-200 rounded-md text-xs cursor-pointer transition-all hover:bg-indigo-500 hover:text-white hover:border-indigo-500 text-black"
-        onclick="setExample(6)">✅ Legitimate</button>
+        onclick="setExample(6)">✅ <span data-i18n="example7">Legitimate</span></button>
     </div>
   </div>
 
   <div class="text-gray-600 text-sm mt-4">
-    <p>This service is provided for free by <a href="https://bettergov.ph" target="_blank"
+    <p data-i18n="footer">This service is provided for free by <a href="https://bettergov.ph" target="_blank"
         rel="noopener noreferrer">BetterGov.ph</a></p>
   </div>
 
   <script>
+    // Translations
+    const translations = {
+      en: {
+        title: "🛡️ Scam & Phishing Detector",
+        subtitle: "Test your messages for spam and phishing attempts",
+        placeholder: "Paste your email or SMS text here to check if it's spam or phishing...\n\nExample: 'URGENT: Your account has been suspended. Click here to verify your identity immediately!'",
+        analyzeButton: "Analyze Text",
+        examplesTitle: "Try these examples:",
+        example1: "GCash Scam",
+        example2: "Delivery SMS",
+        example3: "Bank Alert",
+        example4: "Crypto Scam",
+        example5: "Prize Scam",
+        example6: "Job Scam",
+        example7: "Legitimate",
+        footer: "This service is provided for free by BetterGov.ph",
+        analyzing: "Analyzing...",
+        confidence: "Confidence",
+        enterText: "Please enter some text to analyze",
+        completeCaptcha: "Please complete the CAPTCHA verification"
+      },
+      tl: {
+        title: "🛡️ Detektor ng Scam at Phishing",
+        subtitle: "Suriin ang inyong mensahe para sa spam at phishing",
+        placeholder: "I-paste dito ang iyong email o SMS text upang suriin kung ito ay spam o phishing...\n\nHalimbawa: 'URGENT: Your account has been suspended. Click here to verify your identity immediately!'",
+        analyzeButton: "Suriin ang Teksto",
+        examplesTitle: "Subukan ang mga ito:",
+        example1: "GCash Scam",
+        example2: "Delivery SMS",
+        example3: "Bank Alert",
+        example4: "Crypto Scam",
+        example5: "Prize Scam",
+        example6: "Job Scam",
+        example7: "Lehitimo",
+        footer: "Ang serbisyong ito ay libreng inilulunsad para sa pampubliko mula sa BetterGov.ph",
+        analyzing: "Sinusuri...",
+        confidence: "Katiyakan",
+        enterText: "Ilagay ang teksto na naglalaman ng scam.",
+        completeCaptcha: "Kumpletuhin ang CAPTCHA verification"
+      }
+    };
+
+    // Language state
+    let currentLang = localStorage.getItem('preferredLanguage') || 'en';
+
+    // Language functions
+    function changeLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('preferredLanguage', lang);
+      updateUILanguage();
+    }
+
+    function updateUILanguage() {
+      const t = translations[currentLang] || translations.en;
+      
+      // Update all elements with data-i18n attribute
+      document.querySelectorAll('[data-i18n]').forEach(elem => {
+        const key = elem.getAttribute('data-i18n');
+        if (!t[key]) {
+          return;
+        }
+
+        if (key === 'footer') {
+          elem.innerHTML = t[key];
+        } else {
+          elem.textContent = t[key];
+        }
+      });
+
+      // Update placeholder
+      const textInput = document.getElementById('textInput');
+      if (textInput && t.placeholder) {
+        textInput.placeholder = t.placeholder;
+      }
+
+      // Update language selector
+      document.getElementById('languageSelect').value = currentLang;
+    }
+
     // Worker URL automatically uses the same origin (works for both dev and production)
     const WORKER_URL = window.location.origin;
 
@@ -183,6 +274,9 @@
 
     // Check if already verified and hide CAPTCHA
     window.addEventListener('load', () => {
+      // Initialize language
+      updateUILanguage();
+      
       if (isSessionVerified) {
         const captchaContainer = document.querySelector('.captcha-container');
         if (captchaContainer) {
@@ -226,6 +320,7 @@
     }
 
     async function checkText() {
+      const t = translations[currentLang] || translations.en;
       const textInput = document.getElementById('textInput');
       const checkButton = document.getElementById('checkButton');
       const resultDiv = document.getElementById('result');
@@ -233,19 +328,19 @@
       const text = textInput.value.trim();
 
       if (!text) {
-        alert('Please enter some text to analyze');
+        alert(t.enterText);
         return;
       }
 
       // Only require CAPTCHA for first request in session
       if (!isSessionVerified && !turnstileToken) {
-        alert('Please complete the CAPTCHA verification');
+        alert(t.completeCaptcha);
         return;
       }
 
       // Disable button and show loading
       checkButton.disabled = true;
-      checkButton.textContent = 'Analyzing...';
+      checkButton.textContent = t.analyzing;
       resultDiv.classList.remove('show');
 
       try {
@@ -274,17 +369,15 @@
         resultDiv.innerHTML = `
                     <div class="text-lg font-semibold mb-4">❌ Error</div>
                     <div class="text-sm">${error.message}</div>
-                    <div class="text-sm mt-2">
-                        <strong>Note:</strong> Make sure to update the WORKER_URL in the HTML file with your actual Cloudflare Worker URL.
-                    </div>
                 `;
       } finally {
         checkButton.disabled = false;
-        checkButton.textContent = 'Analyze Text';
+        checkButton.textContent = t.analyzeButton;
       }
     }
 
     function displayResult(data) {
+      const t = translations[currentLang] || translations.en;
       const resultDiv = document.getElementById('result');
       const interpretation = data.interpretation;
       const predictions = data.predictions;
@@ -305,7 +398,7 @@
       resultDiv.innerHTML = `
                 <div class="text-lg font-semibold mb-4">${interpretation.message}</div>
                 <div class="text-sm text-gray-600">
-                    <strong>Confidence:</strong> ${interpretation.confidence.toUpperCase()} (${interpretation.confidenceScore})
+                    <strong>${t.confidence}:</strong> ${interpretation.confidence.toUpperCase()} (${interpretation.confidenceScore})
                 </div>
 
             `;

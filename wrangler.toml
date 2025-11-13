@@ -1,0 +1,10 @@
+name = "scamcheck"
+main = "scamcheck.js"
+compatibility_date = "2024-01-01"
+
+assets.directory = "assets/"
+# Account details (optional - wrangler will use your logged-in account)
+# account_id = "your-account-id"
+[[rules]]
+type = "Text"
+globs = ["**/*.html"]

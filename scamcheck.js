@@ -90,7 +90,7 @@ export default {
 
       // Call Hugging Face Inference API
       const hfResponse = await fetch(
-        'https://api-inference.huggingface.co/models/cybersectony/phishing-email-detection-distilbert_v2.4.1',
+        'https://router.huggingface.co/hf-inference/models/cybersectony/phishing-email-detection-distilbert_v2.4.1',
         {
           method: 'POST',
           headers: {
